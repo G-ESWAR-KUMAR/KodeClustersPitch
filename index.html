@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KodeClusters - Programming Learning Platform</title>
+  <style>
+    :root {
+      --font-family-display: 'Segoe UI', Arial, sans-serif;
+      --font-weight-display: 700;
+      --font-family-content: 'Segoe UI', Arial, sans-serif;
+      --font-weight-content: 400;
+      --font-size-content: 16px;
+      --line-height-content: 1.4;
+    }
+
+    body.theme-dark {
+      --color-bg-base: #0a0e27;
+      --color-bg-elevated: #000814;
+      --color-bg-surface: #1a1f3a;
+      --color-bg-muted: #2d3561;
+      --color-text-primary: #f0f4f8;
+      --color-text-secondary: #cbd5e1;
+      --color-text-muted: #94a3b8;
+      --color-primary: #00d4ff;
+      --color-accent: #ff006e;
+      --color-success: #22c55e;
+      --color-warning: #f59e0b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family-content);
+      font-weight: var(--font-weight-content);
+      font-size: var(--font-size-content);
+      line-height: var(--line-height-content);
+      overflow-x: hidden;
+    }
+
+    .slide {
+      width: 960px;
+      height: 540px;
+      margin: 0 auto 20px;
+      display: flex;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .row { flex-direction: row; }
+    .col { flex-direction: column; }
+    .center {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .space-between { justify-content: space-between; }
+    .items-center { align-items: center; }
+    .items-start { align-items: flex-start; }
+    .items-end { align-items: flex-end; }
+    .fill-width { flex: 1; }
+    .fill-height { flex: 1; display: flex; flex-direction: column; }
+
+    .gap-sm { gap: 0.5rem; }
+    .gap-md { gap: 1rem; }
+    .gap-lg { gap: 1.5rem; }
+    .gap-xl { gap: 2rem; }
+    .gap-2xl { gap: 3rem; }
+
+    .p-4 { padding: 1rem; }
+    .p-6 { padding: 1.5rem; }
+    .p-8 { padding: 2rem; }
+    .p-12 { padding: 3rem; }
+    .p-16 { padding: 4rem; }
+
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .mb-12 { margin-bottom: 3rem; }
+
+    .mt-2 { margin-top: 0.5rem; }
+    .mt-4 { margin-top: 1rem; }
+    .mt-6 { margin-top: 1.5rem; }
+    .mt-8 { margin-top: 2rem; }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-family-display);
+      font-weight: var(--font-weight-display);
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    h1 { font-size: 3rem; }
+    h2 { font-size: 2.25rem; }
+    h3 { font-size: 1.75rem; }
+    h4 { font-size: 1.5rem; }
+    h5 { font-size: 1.25rem; }
+    h6 { font-size: 1rem; }
+
+    .text-6xl { font-size: 3.75rem; }
+    .text-5xl { font-size: 3rem; }
+    .text-4xl { font-size: 2.25rem; }
+    .text-3xl { font-size: 1.875rem; }
+    .text-2xl { font-size: 1.5rem; }
+    .text-xl { font-size: 1.25rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-base { font-size: 1rem; }
+    .text-sm { font-size: 0.875rem; }
+    .text-xs { font-size: 0.75rem; }
+
+    .font-bold { font-weight: 700; }
+    .font-semibold { font-weight: 600; }
+    .font-medium { font-weight: 500; }
+    .font-normal { font-weight: 400; }
+
+    .text-center { text-align: center; }
+    .text-left { text-align: left; }
+
+    .opacity-90 { opacity: 0.9; }
+    .opacity-80 { opacity: 0.8; }
+    .opacity-70 { opacity: 0.7; }
+    .opacity-60 { opacity: 0.6; }
+
+    ul, ol {
+      margin-left: 2rem;
+      line-height: 1.8;
+    }
+
+    ul li { list-style: disc; }
+    li { margin-bottom: 0.75rem; }
+    li:last-child { margin-bottom: 0; }
+
+    /* ANIMATIONS */
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff30; }
+      50% { box-shadow: 0 0 20px #00d4ff, 0 0 30px #00d4ff50; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .animate-slide { animation: slideInUp 0.8s ease-out; }
+    .animate-slide-left { animation: slideInLeft 0.8s ease-out; }
+    .animate-slide-right { animation: slideInRight 0.8s ease-out; }
+    .animate-fade { animation: fadeIn 1s ease-out; }
+    .animate-pulse { animation: pulse 2s infinite; }
+    .animate-glow { animation: glow 2s infinite; }
+    .animate-bounce { animation: bounce 1s infinite; }
+    .animate-spin { animation: spin 3s linear infinite; }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+    /* VISUAL ELEMENTS */
+    .code-window {
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      color: #79c0ff;
+      overflow: hidden;
+    }
+
+    .code-window::before {
+      content: '• • •';
+      display: block;
+      color: #6e40aa;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.3rem;
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, #1a1f3a 0%, #2d3561 100%);
+      border: 2px solid #00d4ff;
+      border-left: 4px solid #ff006e;
+      padding: 1.2rem;
+      margin: 0.5rem 0;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+      animation: slide 3s infinite;
+    }
+
+    @keyframes slide {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #00d4ff 0%, #ff006e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stat-label {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      margin-top: 0.3rem;
+    }
+
+    .feature-card {
+      background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 110, 0.1) 100%);
+      border: 1px solid #00d4ff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+      border-color: #ff006e;
+    }
+
+    .icon-container {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #00d4ff 0%, #ff006e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .neon-box {
+      border: 2px solid #00d4ff;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    }
+
+    .performance-bar {
+      height: 8px;
+      background-color: #2d3561;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .performance-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #00d4ff, #ff006e);
+      border-radius: 4px;
+      animation: fillBar 1.5s ease-out forwards;
+    }
+
+    @keyframes fillBar {
+      from { width: 0%; }
+      to { width: var(--width, 100%); }
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      margin: 1rem 0;
+      position: relative;
+      padding-left: 3rem;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 16px;
+      height: 16px;
+      background-color: #00d4ff;
+      border-radius: 50%;
+      border: 2px solid #0a0e27;
+      box-shadow: 0 0 10px #00d4ff;
+    }
+
+    .comparison-row {
+      display: flex;
+      margin: 0.8rem 0;
+      gap: 0.5rem;
+    }
+
+    .comparison-item {
+      flex: 1;
+      padding: 0.8rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    .comparison-bad {
+      background-color: rgba(244, 63, 94, 0.2);
+      border: 1px solid #f43f5e;
+      color: #fca5a5;
+    }
+
+    .comparison-good {
+      background-color: rgba(34, 197, 94, 0.2);
+      border: 1px solid #22c55e;
+      color: #86efac;
+    }
+
+    .floating-element {
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .badge {
+      display: inline-block;
+      background-color: #ff006e;
+      color: #f0f4f8;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    .matrix-cell {
+      background-color: #1a1f3a;
+      border: 1px solid #00d4ff;
+      padding: 1rem;
+      text-align: center;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .matrix-cell.highlight {
+      background-color: rgba(0, 212, 255, 0.1);
+      border-color: #ff006e;
+      box-shadow: inset 0 0 10px rgba(255, 0, 110, 0.2);
+    }
+
+  </style>
+</head>
+<body class="theme-dark">
+
+  <!-- Slide 1: Title Slide with Animation -->
+  <section class="slide p-16 col center animate-fade" style="background: linear-gradient(135deg, #000814 0%, #0a0e27 50%, #1a0f2e 100%); color: #f0f4f8; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); animation: float 6s ease-in-out infinite;"></div>
+    <div style="position: absolute; bottom: -30%; left: -10%; width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 0, 110, 0.1) 0%, transparent 70%); animation: float 8s ease-in-out infinite;"></div>
+    
+    <div class="animate-slide-up" style="position: relative; z-index: 1;">
+      <h1 class="text-6xl mb-2 font-bold" style="color: #00d4ff;">KodeClusters</h1>
+      <p class="text-2xl mb-4 gradient-text" style="font-weight: 600;">Next-Generation Programming Platform</p>
+      <div class="mb-6">
+        <span class="badge">INNOVATIVE</span>
+        <span class="badge">INTERACTIVE</span>
+        <span class="badge">INTELLIGENT</span>
+      </div>
+      <p class="text-lg" style="color: #cbd5e1;">Transforming How Students Learn to Code</p>
+    </div>
+  </section>
+
+  <!-- Slide 2: The Crisis -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">🚨 The Crisis in Programming Education</h2>
+    <div class="fill-height col gap-md justify-content-start">
+      <div class="stat-box animate-slide delay-1">
+        <div style="color: #ff006e; font-size: 1.5rem; font-weight: bold;">51%</div>
+        <div class="stat-label">of students struggle with complex coding concepts</div>
+      </div>
+      <div class="stat-box animate-slide delay-2">
+        <div style="color: #ff006e; font-size: 1.5rem; font-weight: bold;">5-7 DAYS</div>
+        <div class="stat-label">average wait for manual assignment feedback</div>
+      </div>
+      <div class="stat-box animate-slide delay-3">
+        <div style="color: #ff006e; font-size: 1.5rem; font-weight: bold;">73%</div>
+        <div class="stat-label">lose motivation without real-time feedback</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 3: Student Struggles Detailed -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-4 gradient-text animate-slide">❌ Student Struggles Without KodeClusters</h2>
+    <div class="grid-3 fill-height">
+      <div class="feature-card animate-slide-left delay-1">
+        <div class="icon-container">💻</div>
+        <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">No Real-Time Environment</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">Can't test code immediately, confusion persists</p>
+      </div>
+      <div class="feature-card animate-slide delay-2">
+        <div class="icon-container">🐛</div>
+        <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">Poor Debugging Skills</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">Error fixing without expert guidance</p>
+      </div>
+      <div class="feature-card animate-slide-right delay-3">
+        <div class="icon-container">📊</div>
+        <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">Lost in Progress</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">No visibility where they stand</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 4: Faculty Challenges -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">📚 Faculty & Institution Challenges</h2>
+    <div class="grid-2 fill-height">
+      <div class="neon-box animate-slide-left delay-1" style="background: rgba(0, 212, 255, 0.05);">
+        <h4 style="color: #ff006e; margin-bottom: 1rem;">⏳ Time Burden</h4>
+        <p style="color: #cbd5e1;">Manual evaluation of 100+ assignments is exhausting</p>
+      </div>
+      <div class="neon-box animate-slide-right delay-2" style="background: rgba(255, 0, 110, 0.05);">
+        <h4 style="color: #00d4ff; margin-bottom: 1rem;">👁️ Visibility Crisis</h4>
+        <p style="color: #cbd5e1;">Can't track individual student progress at scale</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 5: The Solution Intro -->
+  <section class="slide p-16 col center" style="background: linear-gradient(135deg, #1a0f2e 0%, #0a0e27 100%); color: #f0f4f8; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; height: 300px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, transparent 70%); filter: blur(20px);"></div>
+    
+    <div class="animate-slide" style="position: relative; z-index: 1;">
+      <h2 class="text-5xl mb-4 gradient-text font-bold">✨ Meet KodeClusters</h2>
+      <p class="text-xl mb-8" style="color: #cbd5e1;">The All-In-One Solution That Solves Everything</p>
+      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+        <span style="background-color: rgba(0, 212, 255, 0.1); border: 1px solid #00d4ff; color: #00d4ff; padding: 0.5rem 1rem; border-radius: 20px;">⚡ Instant Feedback</span>
+        <span style="background-color: rgba(255, 0, 110, 0.1); border: 1px solid #ff006e; color: #ff006e; padding: 0.5rem 1rem; border-radius: 20px;">📈 Real-Time Tracking</span>
+        <span style="background-color: rgba(34, 197, 94, 0.1); border: 1px solid #22c55e; color: #22c55e; padding: 0.5rem 1rem; border-radius: 20px;">🤖 Automated Grading</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 6: Platform Overview -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">🏗️ KodeClusters Architecture</h2>
+    <div class="grid-3 fill-height items-start">
+      <div class="matrix-cell animate-slide-left delay-1" style="padding: 1.2rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👨‍🎓</div>
+        <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">Student Portal</h4>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">Learn, Code, Test, Progress</p>
+      </div>
+      <div class="matrix-cell animate-slide delay-2" style="padding: 1.2rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">👨‍🏫</div>
+        <h4 style="color: #ff006e; margin-bottom: 0.5rem;">Faculty Panel</h4>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">Monitor & Evaluate</p>
+      </div>
+      <div class="matrix-cell animate-slide-right delay-3" style="padding: 1.2rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🏛️</div>
+        <h4 style="color: #22c55e; margin-bottom: 0.5rem;">Admin Control</h4>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">Manage & Report</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 7: Student Experience -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-4 animate-slide" style="color: #00d4ff;">🎓 Student Experience: LeetCode-Style Interface</h2>
+    <div class="grid-2 gap-lg fill-height items-start">
+      <div class="code-window animate-slide-left delay-1" style="box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);">
+        <div style="color: #7ee787;">// Problem Panel</div>
+        <div style="margin: 0.5rem 0; color: #79c0ff;">Problem Statement ✓</div>
+        <div style="color: #79c0ff;">Test Cases ✓</div>
+        <div style="color: #79c0ff;">Expected Output ✓</div>
+      </div>
+      <div class="code-window animate-slide-right delay-2" style="box-shadow: 0 0 20px rgba(255, 0, 110, 0.2);">
+        <div style="color: #7ee787;">// Code Editor</div>
+        <div style="margin: 0.5rem 0; color: #79c0ff;">Syntax Highlighting ✓</div>
+        <div style="color: #79c0ff;">Real-Time Compiler ✓</div>
+        <div style="color: #79c0ff;">Error Detection ✓</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 8: Student Features -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">✅ What Students Get</h2>
+    <ul class="text-lg" style="color: #cbd5e1;">
+      <li class="animate-slide delay-1">🎯 <strong style="color: #00d4ff;">Hands-on Coding Practice</strong> - Write, test, submit in seconds</li>
+      <li class="animate-slide delay-2">⚡ <strong style="color: #ff006e;">Instant Feedback</strong> - Know exactly what's wrong immediately</li>
+      <li class="animate-slide delay-3">📊 <strong style="color: #22c55e;">Progress Dashboard</strong> - See your skills mastered in real-time</li>
+      <li class="animate-slide delay-4">🏆 <strong style="color: #00d4ff;">Competitive Edge</strong> - Leaderboards & achievements</li>
+    </ul>
+  </section>
+
+  <!-- Slide 9: Assessment System -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">📋 Comprehensive Assessment System</h2>
+    <div style="display: flex; flex-direction: column; gap: 0.8rem; fill-height: 1;">
+      <div class="animate-slide delay-1" style="display: flex; align-items: center; background: rgba(0, 212, 255, 0.1); padding: 1rem; border-left: 3px solid #00d4ff; border-radius: 4px;">
+        <span style="font-size: 1.5rem; margin-right: 1rem;">🧩</span>
+        <div>
+          <div style="color: #00d4ff; font-weight: bold;">Hybrid Questions</div>
+          <div style="color: #cbd5e1; font-size: 0.9rem;">Coding problems + MCQs in same test</div>
+        </div>
+      </div>
+      <div class="animate-slide delay-2" style="display: flex; align-items: center; background: rgba(255, 0, 110, 0.1); padding: 1rem; border-left: 3px solid #ff006e; border-radius: 4px;">
+        <span style="font-size: 1.5rem; margin-right: 1rem;">⚙️</span>
+        <div>
+          <div style="color: #ff006e; font-weight: bold;">Automated Grading</div>
+          <div style="color: #cbd5e1; font-size: 0.9rem;">Instant results with detailed breakdowns</div>
+        </div>
+      </div>
+      <div class="animate-slide delay-3" style="display: flex; align-items: center; background: rgba(34, 197, 94, 0.1); padding: 1rem; border-left: 3px solid #22c55e; border-radius: 4px;">
+        <span style="font-size: 1.5rem; margin-right: 1rem;">🎯</span>
+        <div>
+          <div style="color: #22c55e; font-weight: bold;">Smart Analytics</div>
+          <div style="color: #cbd5e1; font-size: 0.9rem;">Identify weak areas & suggest improvements</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 10: Faculty Dashboard -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">👨‍🏫 Faculty SuperPowers</h2>
+    <div class="grid-2 gap-lg fill-height">
+      <div class="animate-slide-left delay-1" style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid #00d4ff;">
+          <div style="color: #00d4ff; font-weight: bold; margin-bottom: 0.3rem;">📊 Real-Time Monitoring</div>
+          <p style="color: #cbd5e1; font-size: 0.85rem;">Track each student's progress live</p>
+        </div>
+        <div style="background: rgba(255, 0, 110, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid #ff006e;">
+          <div style="color: #ff006e; font-weight: bold; margin-bottom: 0.3rem;">📈 Performance Trends</div>
+          <p style="color: #cbd5e1; font-size: 0.85rem;">Visualize improvement over time</p>
+        </div>
+      </div>
+      <div class="animate-slide-right delay-2" style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <div style="background: rgba(34, 197, 94, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid #22c55e;">
+          <div style="color: #22c55e; font-weight: bold; margin-bottom: 0.3rem;">🎯 Smart Recommendations</div>
+          <p style="color: #cbd5e1; font-size: 0.85rem;">AI-suggested interventions</p>
+        </div>
+        <div style="background: rgba(0, 212, 255, 0.1); padding: 1rem; border-radius: 6px; border-left: 3px solid #00d4ff;">
+          <div style="color: #00d4ff; font-weight: bold; margin-bottom: 0.3rem;">📋 1-Click Reports</div>
+          <p style="color: #cbd5e1; font-size: 0.85rem;">Generate attendance & grades</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 11: Real Example in Action -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-4 gradient-text animate-slide">⚡ Real-Time Example</h2>
+    <div class="neon-box animate-slide" style="background: rgba(0, 212, 255, 0.05); margin-top: 1rem;">
+      <div style="margin-bottom: 1rem; color: #00d4ff; font-weight: bold;">STUDENT SOLVES: "Print Fibonacci Series up to N"</div>
+      
+      <div style="background-color: rgba(13, 17, 23, 0.6); padding: 1rem; border-radius: 4px; margin-bottom: 1rem; font-family: monospace; font-size: 0.8rem;">
+        <div style="color: #7ee787;">1. Problem displayed with test cases</div>
+        <div style="color: #7ee787;">2. Student writes code in editor</div>
+        <div style="color: #7ee787;">3. ⏱️ INSTANT: Test case 1 ✓ PASSED</div>
+        <div style="color: #7ee787;">4. ⏱️ INSTANT: Test case 2 ✓ PASSED</div>
+        <div style="color: #22c55e; font-weight: bold;">5. ✅ RESULT: Problem Complete! +10 Points</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 12: Before vs After -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">📊 Before vs After KodeClusters</h2>
+    <div class="grid-2 gap-lg fill-height items-start">
+      <div class="animate-slide-left delay-1">
+        <h4 style="color: #f43f5e; margin-bottom: 1rem;">❌ Without Platform</h4>
+        <div class="comparison-row">
+          <div class="comparison-item comparison-bad">5-7 Days Feedback</div>
+        </div>
+        <div class="comparison-row">
+          <div class="comparison-item comparison-bad">Manual Grading</div>
+        </div>
+        <div class="comparison-row">
+          <div class="comparison-item comparison-bad">Lost Progress Data</div>
+        </div>
+        <div class="comparison-row">
+          <div class="comparison-item comparison-bad">No Insights</div>
+        </div>
+      </div>
+      <div class="animate-slide-right delay-2">
+        <h4 style="color: #22c55e; margin-bottom: 1rem;">✅ With KodeClusters</h4>
+        <div class="comparison-row">
+          <div class="comparison-item comparison-good">Instant Feedback</div>
+        </div>
+        <div class="comparison-row">
+          <div class="comparison-item comparison-good">Auto Grading</div>
+        </div>
+        <div class="comparison-row">
+          <div class="comparison-item comparison-good">Real-Time Tracking</div>
+        </div>
+        <div class="comparison-row">
+          <div class="comparison-item comparison-good">Deep Analytics</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 13: Impact Numbers -->
+  <section class="slide p-16 col center" style="background: linear-gradient(135deg, #1a0f2e 0%, #0a0e27 100%); color: #f0f4f8;">
+    <h2 class="mb-8 gradient-text animate-slide">🚀 Impact by Numbers</h2>
+    <div class="grid-3 fill-height items-start">
+      <div class="animate-slide-left delay-1" style="text-align: center;">
+        <div style="font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #00d4ff, #ff006e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">80%</div>
+        <p style="color: #cbd5e1; margin-top: 0.5rem;">Reduce manual grading</p>
+      </div>
+      <div class="animate-slide delay-2" style="text-align: center;">
+        <div style="font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #00d4ff, #ff006e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">60%</div>
+        <p style="color: #cbd5e1; margin-top: 0.5rem;">Increase engagement</p>
+      </div>
+      <div class="animate-slide-right delay-3" style="text-align: center;">
+        <div style="font-size: 3rem; font-weight: 900; background: linear-gradient(135deg, #00d4ff, #ff006e); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">42%</div>
+        <p style="color: #cbd5e1; margin-top: 0.5rem;">Improve test scores</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 14: Perfect For -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">🎯 Perfect For</h2>
+    <div class="grid-2 gap-lg fill-height items-start">
+      <div class="feature-card animate-slide-left delay-1">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏫</div>
+        <h4 style="color: #00d4ff;">Engineering Colleges</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">CS/IT departments with 100+ students</p>
+      </div>
+      <div class="feature-card animate-slide-right delay-2">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🚀</div>
+        <h4 style="color: #ff006e;">Bootcamps & Clubs</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">Competitive programming training</p>
+      </div>
+      <div class="feature-card animate-slide-left delay-3">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎓</div>
+        <h4 style="color: #22c55e;">Advanced Schools</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">Senior classes with coding electives</p>
+      </div>
+      <div class="feature-card animate-slide-right delay-4">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">💼</div>
+        <h4 style="color: #00d4ff;">Corporate Training</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">Employee skill development</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 15: Tech Stack -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">⚙️ Built on Modern Tech</h2>
+    <div class="grid-3 gap-md fill-height items-start">
+      <div class="animate-slide-left delay-1" style="background: rgba(0, 212, 255, 0.08); padding: 1.2rem; border-radius: 8px; border: 1px solid #00d4ff;">
+        <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">💻 Frontend</h4>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">HTML5, CSS3, Modern JavaScript</p>
+        <div class="performance-bar" style="margin-top: 0.5rem;">
+          <div class="performance-fill" style="--width: 95%;"></div>
+        </div>
+      </div>
+      <div class="animate-slide delay-2" style="background: rgba(255, 0, 110, 0.08); padding: 1.2rem; border-radius: 8px; border: 1px solid #ff006e;">
+        <h4 style="color: #ff006e; margin-bottom: 0.5rem;">🔧 Backend</h4>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">PHP 8+, RESTful APIs, Microservices</p>
+        <div class="performance-bar" style="margin-top: 0.5rem;">
+          <div class="performance-fill" style="--width: 90%;"></div>
+        </div>
+      </div>
+      <div class="animate-slide-right delay-3" style="background: rgba(34, 197, 94, 0.08); padding: 1.2rem; border-radius: 8px; border: 1px solid #22c55e;">
+        <h4 style="color: #22c55e; margin-bottom: 0.5rem;">🗄️ Database</h4>
+        <p style="color: #cbd5e1; font-size: 0.85rem;">MySQL, Redis Cache, Scalable</p>
+        <div class="performance-bar" style="margin-top: 0.5rem;">
+          <div class="performance-fill" style="--width: 88%;"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 16: Implementation Timeline -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-8 gradient-text animate-slide">📅 Quick Deployment Timeline</h2>
+    <div class="fill-height col gap-md justify-content-start">
+      <div class="timeline-item animate-slide delay-1">
+        <div style="flex: 1;">
+          <h4 style="color: #00d4ff; margin-bottom: 0.3rem;">Week 1-2: Platform Setup</h4>
+          <p style="color: #cbd5e1; font-size: 0.9rem;">Customization with your branding & logo</p>
+        </div>
+      </div>
+      <div class="timeline-item animate-slide delay-2">
+        <div style="flex: 1;">
+          <h4 style="color: #ff006e; margin-bottom: 0.3rem;">Week 3: Staff Training</h4>
+          <p style="color: #cbd5e1; font-size: 0.9rem;">Documentation & hands-on sessions</p>
+        </div>
+      </div>
+      <div class="timeline-item animate-slide delay-3">
+        <div style="flex: 1;">
+          <h4 style="color: #22c55e; margin-bottom: 0.3rem;">Week 4: Live Launch</h4>
+          <p style="color: #cbd5e1; font-size: 0.9rem;">Go-live with 24/7 support</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 17: Support & Services -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 gradient-text animate-slide">🤝 Enterprise Support Package</h2>
+    <ul class="text-lg" style="color: #cbd5e1;">
+      <li class="animate-slide delay-1">🕐 <strong style="color: #00d4ff;">24/7 Technical Support</strong> - Critical issues within 1 hour</li>
+      <li class="animate-slide delay-2">🔄 <strong style="color: #ff006e;">Regular Updates</strong> - New features every sprint</li>
+      <li class="animate-slide delay-3">👥 <strong style="color: #22c55e;">Dedicated Manager</strong> - Personal account support</li>
+      <li class="animate-slide delay-4">📚 <strong style="color: #00d4ff;">Training Programs</strong> - Ongoing staff workshops</li>
+    </ul>
+  </section>
+
+  <!-- Slide 18: Pricing -->
+  <section class="slide p-16 col" style="background-color: #0a0e27; color: #f0f4f8;">
+    <h2 class="mb-6 text-center gradient-text animate-slide">💰 Flexible Pricing Models</h2>
+    <div class="grid-3 gap-md fill-height items-start">
+      <div class="matrix-cell animate-slide-left delay-1" style="box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">💵</div>
+        <h4 style="color: #00d4ff; margin-bottom: 0.5rem;">Per-Student</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">Pay per active enrolled student</p>
+        <p style="color: #00d4ff; font-weight: bold; margin-top: 0.5rem;">₹50-100/month</p>
+      </div>
+      <div class="matrix-cell highlight animate-slide delay-2" style="box-shadow: 0 0 30px rgba(255, 0, 110, 0.2);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏢</div>
+        <h4 style="color: #ff006e; margin-bottom: 0.5rem;">Institutional</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">Unlimited students, all features</p>
+        <p style="color: #ff006e; font-weight: bold; margin-top: 0.5rem;">Custom Pricing</p>
+      </div>
+      <div class="matrix-cell animate-slide-right delay-3" style="box-shadow: 0 0 20px rgba(34, 197, 94, 0.1);">
+        <div style="font-size: 2rem; margin-bottom: 0.5rem;">⚙️</div>
+        <h4 style="color: #22c55e; margin-bottom: 0.5rem;">Custom Plans</h4>
+        <p style="color: #cbd5e1; font-size: 0.9rem;">Tailored to your specific needs</p>
+        <p style="color: #22c55e; font-weight: bold; margin-top: 0.5rem;">Bespoke Solutions</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 19: Testimonial Style -->
+  <section class="slide p-16 col center" style="background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(255, 0, 110, 0.1) 100%); color: #f0f4f8; border: 2px solid #00d4ff; border-radius: 10px; margin: 0 auto 20px;">
+    <div class="animate-slide" style="text-align: center;">
+      <h2 class="mb-6 gradient-text">✨ Why Choose KodeClusters?</h2>
+      <p class="text-xl mb-4" style="color: #cbd5e1;"><strong style="color: #00d4ff;">All-in-one solution</strong> that addresses every challenge</p>
+      <p class="text-lg mb-6" style="color: #cbd5e1;">No more juggling between 5 different tools</p>
+      <p style="color: #00d4ff; font-weight: bold;">Start transforming your institution TODAY</p>
+    </div>
+  </section>
+
+  <!-- Slide 20: Call to Action -->
+  <section class="slide p-16 col center animate-fade" style="background: linear-gradient(135deg, #000814 0%, #0a0e27 50%, #1a0f2e 100%); color: #f0f4f8; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -50%; right: -10%; width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%); animation: float 6s ease-in-out infinite;"></div>
+    
+    <div class="animate-slide" style="position: relative; z-index: 1;">
+      <h2 class="text-5xl mb-4 gradient-text font-bold">🚀 Ready to Transform?</h2>
+      <p class="text-xl mb-8" style="color: #cbd5e1;">Schedule a personalized demo for your institution</p>
+      <p class="text-lg mb-2" style="color: #00d4ff; font-weight: bold;">✓ Free consultation</p>
+      <p class="text-lg" style="color: #22c55e; font-weight: bold;">✓ Custom pricing quote</p>
+    </div>
+  </section>
+
+  <!-- Slide 21: Thank You -->
+  <section class="slide p-16 col center animate-fade" style="background: linear-gradient(135deg, #000814 0%, #0a0e27 100%); color: #f0f4f8; position: relative; overflow: hidden;">
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: linear-gradient(90deg, transparent, #00d4ff, transparent); animation: slide 3s infinite;"></div>
+    
+    <div class="animate-slide" style="position: relative; z-index: 1;">
+      <h1 class="text-6xl mb-4 gradient-text font-bold">Thank You</h1>
+      <p class="text-2xl mb-8" style="color: #cbd5e1;">Let's build better programmers together</p>
+      <p class="text-xl" style="color: #00d4ff; font-weight: bold;">KodeClusters</p>
+      <p class="text-lg mt-4" style="color: #cbd5e1;">Empowering the Next Generation of Developers</p>
+    </div>
+  </section>
+
+  <!-- Fullscreen Slideshow Modal -->
+  <div id="slideshowModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000814; z-index: 9999; overflow: hidden;">
+    <!-- Slide Container -->
+    <div id="slideshowContainer" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+      <div id="currentSlideDisplay" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.5s ease-in-out;"></div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div style="position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 1rem; z-index: 10000;">
+      <button id="prevBtn" style="background: rgba(0, 212, 255, 0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">← Previous</button>
+      <div id="slideCounter" style="background: rgba(0, 212, 255, 0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 0.5rem 1rem; border-radius: 4px; font-weight: bold; min-width: 60px; text-align: center;">1/21</div>
+      <button id="nextBtn" style="background: rgba(0, 212, 255, 0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">Next →</button>
+    </div>
+
+    <!-- Close Button -->
+    <button id="closeBtn" style="position: fixed; top: 20px; right: 20px; background: rgba(255, 0, 110, 0.2); border: 1px solid #ff006e; color: #ff006e; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-weight: bold; transition: all 0.3s ease; z-index: 10001;">✕ Exit (ESC)</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const modal = document.getElementById('slideshowModal');
+    const currentSlideDisplay = document.getElementById('currentSlideDisplay');
+    const slideCounter = document.getElementById('slideCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const closeBtn = document.getElementById('closeBtn');
+    let currentSlide = 0;
+    let totalSlides = slides.length;
+
+    // Enter fullscreen mode when clicking a slide
+    slides.forEach((slide, index) => {
+      slide.style.cursor = 'pointer';
+      slide.addEventListener('click', () => {
+        currentSlide = index;
+        enterFullscreen();
+      });
+    });
+
+    function enterFullscreen() {
+      modal.style.display = 'flex';
+      displaySlide();
+    }
+
+    function exitFullscreen() {
+      modal.style.display = 'none';
+    }
+
+    function displaySlide() {
+      // Clear previous content
+      currentSlideDisplay.innerHTML = '';
+      
+      // Clone the current slide and scale it
+      const slideClone = slides[currentSlide].cloneNode(true);
+      slideClone.style.width = '95vw';
+      slideClone.style.height = '95vh';
+      slideClone.style.margin = '0';
+      slideClone.style.maxWidth = '1400px';
+      slideClone.style.maxHeight = '900px';
+      
+      currentSlideDisplay.appendChild(slideClone);
+      
+      // Update counter
+      slideCounter.textContent = `${currentSlide + 1}/${totalSlides}`;
+      
+      // Add animation
+      currentSlideDisplay.style.opacity = '0';
+      setTimeout(() => {
+        currentSlideDisplay.style.opacity = '1';
+      }, 10);
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        displaySlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        displaySlide();
+      }
+    }
+
+    // Button click handlers
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+    closeBtn.addEventListener('click', exitFullscreen);
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (modal.style.display === 'flex') {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          e.preventDefault();
+          nextSlide();
+        } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+          e.preventDefault();
+          prevSlide();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          exitFullscreen();
+        }
+      }
+    });
+
+    // Hover effects on buttons
+    [prevBtn, nextBtn].forEach(btn => {
+      btn.addEventListener('mouseenter', function() {
+        this.style.background = 'rgba(0, 212, 255, 0.4)';
+        this.style.boxShadow = '0 0 15px rgba(0, 212, 255, 0.4)';
+      });
+      btn.addEventListener('mouseleave', function() {
+        this.style.background = 'rgba(0, 212, 255, 0.2)';
+        this.style.boxShadow = 'none';
+      });
+    });
+
+    closeBtn.addEventListener('mouseenter', function() {
+      this.style.background = 'rgba(255, 0, 110, 0.4)';
+      this.style.boxShadow = '0 0 15px rgba(255, 0, 110, 0.4)';
+    });
+
+    closeBtn.addEventListener('mouseleave', function() {
+      this.style.background = 'rgba(255, 0, 110, 0.2)';
+      this.style.boxShadow = 'none';
+    });
+
+    // Add hint text on load
+    const hint = document.createElement('div');
+    hint.style.cssText = 'position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%); color: #94a3b8; font-size: 0.75rem; opacity: 0; transition: opacity 0.3s;';
+    hint.textContent = '💡 Click any slide to start presentation mode';
+    document.body.appendChild(hint);
+
+    setTimeout(() => {
+      hint.style.opacity = '1';
+    }, 500);
+
+    setTimeout(() => {
+      hint.style.opacity = '0';
+    }, 4000);
+  </script>
+
+</body>
+</html>
